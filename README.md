@@ -9,7 +9,6 @@ Tabulator.defaultOptions.columnDefaults = {
   headerSort: false,
 };
 ```
-
 - Create table
 ```js
 const container = document.getElementById("container");
@@ -24,6 +23,21 @@ table = new Tabulator(container, {
     {column: "id", dir: "asc"},
     {column: "createdAt", dir: "asc"},
   ],
+  rowContextMenu: function(e, row) {
+    const menu = [];
+
+    menu.push({
+      label: "Test",
+      menu: [{
+        label: "Test",
+        action: function(e row) {
+          
+        }
+      }],
+    });
+
+    return menu;
+  },
   columns: [
     {
       title: "ID",
@@ -42,7 +56,9 @@ table = new Tabulator(container, {
     }
   [
 });
-
+```
+- Add record
+```js
 await table.addData([
   {
     id: 1,
@@ -52,5 +68,27 @@ await table.addData([
     createdAt: Date.now()
   }
 ]}
-
+```
+- Clear header filter
+```js
+const columns = table.getColumns();
+for (const column of columns) {
+  column.setHeaderFilterValue(null);
+}
+```
+- Reload header filter
+```js
+const columns = table.getColumns();
+for (const column of columns) {
+  const tmp = column.getHeaderFilterValue();
+  if (typeof(tmp) !== "undefined" && tmp !== null) {
+    column.setHeaderFilterValue(null);
+    column.setHeaderFilterValue(tmp);
+  }
+}
+```
+- Re-sort table
+```js
+const sorters = table.getSorters();
+table.setSort(sorters);
 ```
