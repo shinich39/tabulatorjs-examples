@@ -23,6 +23,15 @@ table = new Tabulator(container, {
     {column: "id", dir: "asc"},
     {column: "createdAt", dir: "asc"},
   ],
+  rowFormatter: function(row) {
+    const element = row.getElement();
+    const record = row.getData();
+    if (record.createdAt < Date.now()) {
+      element.style.backgroundColor = "red";
+    } else {
+      element.style.backgroundColor = "";
+    }
+  },
   rowContextMenu: function(e, row) {
     const menu = [];
 
@@ -47,11 +56,13 @@ table = new Tabulator(container, {
       title: "CreatedAt",
       field: "createdAt",
       formatter: function(cell, formatterParams, onRendered) {
-        const v = cell.getValue();
-        if (!v) {
+        const row = cell.getRow();
+        const record = row.getData();
+        const createdAt = cell.getValue();
+        if (!createdAt) {
           return "";
         }
-        return moment(v).format("LLLL");
+        return moment(createdAt).format("LLLL");
       },
     }
   [
